@@ -1034,6 +1034,14 @@ def too_large(e):
     flash("Uploaded file is too large (max 5MB).", "danger")
     return redirect(request.referrer or url_for("dashboard"))
 
+@app.route("/technologies")
+def technologies():
+    return render_template("technologies.html")
+
+@app.route("/workflow")
+def workflow():
+    return render_template("workflow.html")
+
 
 # ---------------------------------------------------------------------------
 # Entry point
