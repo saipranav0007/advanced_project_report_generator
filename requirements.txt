@@ -1,0 +1,7 @@
+Flask==3.0.3
+Jinja2==3.1.4
+Werkzeug==3.0.3
+reportlab==4.2.5
+python-docx==1.2.0
+gunicorn
+reportlab==4.2.5
