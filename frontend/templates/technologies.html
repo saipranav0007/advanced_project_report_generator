@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+
+{% block title %}Technologies Used | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <div class="mb-4">
+      <h2 class="fw-bold mb-1"><i class="bi bi-cpu text-info me-2"></i>Technologies Used</h2>
+      <p class="text-muted small mb-0">The stack powering Project Report Generator, end to end.</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Frontend -->
+      <div class="col-lg-6">
+        <div class="card bg-secondary border-0 shadow-sm h-100">
+          <div class="card-header bg-transparent border-bottom border-dark p-4 d-flex align-items-center gap-2">
+            <i class="bi bi-window text-info fs-5"></i>
+            <h5 class="fw-bold mb-0 text-white">Frontend</h5>
+          </div>
+          <div class="card-body p-4">
+            <ul class="list-group list-group-flush bg-transparent">
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-filetype-html text-danger fs-4"></i>
+                <div><span class="text-white fw-semibold">HTML5</span><div class="text-muted small">Semantic page structure via Jinja2 templates</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-filetype-css text-primary fs-4"></i>
+                <div><span class="text-white fw-semibold">CSS3</span><div class="text-muted small">Custom dark theme, cards, and layout styling</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-bootstrap-fill text-info fs-4"></i>
+                <div><span class="text-white fw-semibold">Bootstrap 5</span><div class="text-muted small">Responsive grid, components, and utility classes</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-filetype-js text-warning fs-4"></i>
+                <div><span class="text-white fw-semibold">JavaScript</span><div class="text-muted small">Interactive UI — chat, forms, live progress bars</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-bar-chart-line text-info fs-4"></i>
+                <div><span class="text-white fw-semibold">Chart.js</span><div class="text-muted small">Analytics dashboard charts and graphs</div></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backend -->
+      <div class="col-lg-6">
+        <div class="card bg-secondary border-0 shadow-sm h-100">
+          <div class="card-header bg-transparent border-bottom border-dark p-4 d-flex align-items-center gap-2">
+            <i class="bi bi-server text-info fs-5"></i>
+            <h5 class="fw-bold mb-0 text-white">Backend</h5>
+          </div>
+          <div class="card-body p-4">
+            <ul class="list-group list-group-flush bg-transparent">
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-filetype-py text-info fs-4"></i>
+                <div><span class="text-white fw-semibold">Python</span><div class="text-muted small">Core application language</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-server text-light fs-4"></i>
+                <div><span class="text-white fw-semibold">Flask 3</span><div class="text-muted small">Routing, sessions, and request handling</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-braces text-warning fs-4"></i>
+                <div><span class="text-white fw-semibold">Jinja2</span><div class="text-muted small">Server-side template rendering</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-shield-lock text-success fs-4"></i>
+                <div><span class="text-white fw-semibold">Werkzeug</span><div class="text-muted small">Password hashing (scrypt) and WSGI utilities</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-robot text-info fs-4"></i>
+                <div><span class="text-white fw-semibold">Custom Rule-Based Chatbot</span><div class="text-muted small">Pure-Python AI Assistant, no external API required</div></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data & Documents -->
+      <div class="col-lg-6">
+        <div class="card bg-secondary border-0 shadow-sm h-100">
+          <div class="card-header bg-transparent border-bottom border-dark p-4 d-flex align-items-center gap-2">
+            <i class="bi bi-database-fill text-info fs-5"></i>
+            <h5 class="fw-bold mb-0 text-white">Data &amp; Document Generation</h5>
+          </div>
+          <div class="card-body p-4">
+            <ul class="list-group list-group-flush bg-transparent">
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-database-fill text-info fs-4"></i>
+                <div><span class="text-white fw-semibold">SQLite</span><div class="text-muted small">Lightweight relational database via Python's sqlite3</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-file-earmark-pdf-fill text-danger fs-4"></i>
+                <div><span class="text-white fw-semibold">ReportLab</span><div class="text-muted small">Generates college-formatted PDF reports</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-file-earmark-word-fill text-primary fs-4"></i>
+                <div><span class="text-white fw-semibold">python-docx</span><div class="text-muted small">Generates fully editable Word (.docx) reports</div></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deployment -->
+      <div class="col-lg-6">
+        <div class="card bg-secondary border-0 shadow-sm h-100">
+          <div class="card-header bg-transparent border-bottom border-dark p-4 d-flex align-items-center gap-2">
+            <i class="bi bi-cloud-arrow-up-fill text-info fs-5"></i>
+            <h5 class="fw-bold mb-0 text-white">Deployment</h5>
+          </div>
+          <div class="card-body p-4">
+            <ul class="list-group list-group-flush bg-transparent">
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-hdd-network text-success fs-4"></i>
+                <div><span class="text-white fw-semibold">Gunicorn</span><div class="text-muted small">Production-grade WSGI server</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-cloud-fill text-info fs-4"></i>
+                <div><span class="text-white fw-semibold">Render</span><div class="text-muted small">Cloud hosting with continuous deployment from GitHub</div></div>
+              </li>
+              <li class="list-group-item bg-transparent border-dark d-flex align-items-center gap-3 px-0">
+                <i class="bi bi-github text-light fs-4"></i>
+                <div><span class="text-white fw-semibold">GitHub</span><div class="text-muted small">Version control and source of truth for deploys</div></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}
