@@ -1,0 +1,220 @@
+{% extends "layout.html" %}
+
+{% block title %}Workflow | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <div class="mb-4">
+      <h2 class="fw-bold mb-1"><i class="bi bi-diagram-3 text-info me-2"></i>Workflow</h2>
+      <p class="text-muted small mb-0">Click any step below to see exactly what happens at that stage.</p>
+    </div>
+
+    <div class="workflow-track" id="workflowTrack">
+      <div class="workflow-line"></div>
+
+      <div class="workflow-step" data-step="1">
+        <div class="workflow-node"><i class="bi bi-person-plus"></i></div>
+        <div class="workflow-label">
+          <span class="workflow-num">1</span>
+          <span class="workflow-title">Register / Login</span>
+        </div>
+      </div>
+
+      <div class="workflow-step" data-step="2">
+        <div class="workflow-node"><i class="bi bi-grid-3x3-gap"></i></div>
+        <div class="workflow-label">
+          <span class="workflow-num">2</span>
+          <span class="workflow-title">Choose a Template</span>
+        </div>
+      </div>
+
+      <div class="workflow-step" data-step="3">
+        <div class="workflow-node"><i class="bi bi-pencil-square"></i></div>
+        <div class="workflow-label">
+          <span class="workflow-num">3</span>
+          <span class="workflow-title">Build Your Report</span>
+        </div>
+      </div>
+
+      <div class="workflow-step" data-step="4">
+        <div class="workflow-node"><i class="bi bi-eye"></i></div>
+        <div class="workflow-label">
+          <span class="workflow-num">4</span>
+          <span class="workflow-title">Save Draft / Preview</span>
+        </div>
+      </div>
+
+      <div class="workflow-step" data-step="5">
+        <div class="workflow-node"><i class="bi bi-download"></i></div>
+        <div class="workflow-label">
+          <span class="workflow-num">5</span>
+          <span class="workflow-title">Generate &amp; Download</span>
+        </div>
+      </div>
+
+      <div class="workflow-step" data-step="6">
+        <div class="workflow-node"><i class="bi bi-people"></i></div>
+        <div class="workflow-label">
+          <span class="workflow-num">6</span>
+          <span class="workflow-title">Manage &amp; Collaborate</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bg-secondary border-0 shadow-sm mt-4" id="workflowDetailCard">
+      <div class="card-body p-4">
+        <div id="workflowDetailContent">
+          <h5 class="fw-bold text-white mb-2"><i class="bi bi-person-plus text-info me-2"></i>Register / Login</h5>
+          <p class="text-muted mb-0">Create an account with your name, email, and password — or log back in if you already have one. Your session keeps you signed in across the app, including drafts, reports, and your admin/user role.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<style>
+.workflow-track {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem 1rem 1rem;
+  overflow-x: auto;
+  gap: 0.5rem;
+}
+.workflow-line {
+  position: absolute;
+  top: 2.9rem;
+  left: 5%;
+  right: 5%;
+  height: 3px;
+  background: linear-gradient(90deg, #0dcaf0, #6f42c1);
+  opacity: 0.35;
+  z-index: 0;
+}
+.workflow-step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  flex: 1;
+  min-width: 110px;
+  text-align: center;
+}
+.workflow-node {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #343a40;
+  border: 3px solid #495057;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #adb5bd;
+  transition: all 0.25s ease;
+}
+.workflow-step:hover .workflow-node {
+  border-color: #0dcaf0;
+  color: #0dcaf0;
+  transform: translateY(-3px);
+}
+.workflow-step.active .workflow-node {
+  background: linear-gradient(135deg, #0dcaf0, #6f42c1);
+  border-color: #0dcaf0;
+  color: #fff;
+  box-shadow: 0 0 0 6px rgba(13, 202, 240, 0.15);
+  transform: scale(1.08);
+}
+.workflow-label {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.workflow-num {
+  font-size: 0.7rem;
+  color: #6c757d;
+  font-weight: 600;
+}
+.workflow-title {
+  font-size: 0.85rem;
+  color: #e9ecef;
+  font-weight: 600;
+  max-width: 110px;
+}
+.workflow-step.active .workflow-title {
+  color: #0dcaf0;
+}
+#workflowDetailCard {
+  animation: fadeSlide 0.25s ease;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const steps = {
+    1: {
+      icon: "bi-person-plus",
+      title: "Register / Login",
+      text: "Create an account with your name, email, and password — or log back in if you already have one. Your session keeps you signed in across the app, including drafts, reports, and your admin/user role."
+    },
+    2: {
+      icon: "bi-grid-3x3-gap",
+      title: "Choose a Template",
+      text: "Pick from Mini Project, Major Project, Internship, Research Paper, Seminar Report, or Industrial Training. Each template pre-structures the chapters expected for that kind of submission."
+    },
+    3: {
+      icon: "bi-pencil-square",
+      title: "Build Your Report",
+      text: "Fill in your project details chapter by chapter in the Report Builder — Abstract, Introduction, System Analysis, Design & Implementation, and Advantages/Limitations/Conclusion. Use Auto-Draft to get a starter structure for any section, or Polish to clean up phrasing instantly."
+    },
+    4: {
+      icon: "bi-eye",
+      title: "Save Draft / Preview",
+      text: "Not finished? Save as a draft and pick up right where you left off later. Ready to check formatting? Preview shows exactly how your final document will look before you commit to generating it."
+    },
+    5: {
+      icon: "bi-download",
+      title: "Generate & Download",
+      text: "Export your finished report as a college-formatted PDF (via ReportLab) for submission, or as an editable DOCX (via python-docx) if you want to keep tweaking it in Word."
+    },
+    6: {
+      icon: "bi-people",
+      title: "Manage & Collaborate",
+      text: "Find every report in My Reports, recover deleted ones from Trash, track exports in Downloads, view your activity in Analytics, or share a report with teammates in the Team Hub."
+    }
+  };
+
+  const track = document.getElementById('workflowTrack');
+  const detailContent = document.getElementById('workflowDetailContent');
+  const stepEls = track.querySelectorAll('.workflow-step');
+
+  function setActive(stepNum) {
+    stepEls.forEach(el => el.classList.toggle('active', el.dataset.step === String(stepNum)));
+    const s = steps[stepNum];
+    detailContent.innerHTML = `
+      <h5 class="fw-bold text-white mb-2"><i class="bi ${s.icon} text-info me-2"></i>${s.title}</h5>
+      <p class="text-muted mb-0">${s.text}</p>
+    `;
+  }
+
+  stepEls.forEach(el => {
+    el.addEventListener('click', () => setActive(el.dataset.step));
+  });
+
+  setActive('1');
+})();
+</script>
+{% endblock %}
