@@ -9,7 +9,7 @@
   <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
     <div class="mb-4">
       <h2 class="fw-bold mb-1"><i class="bi bi-diagram-3 text-info me-2"></i>Workflow</h2>
-      <p class="text-muted small mb-0">Click any step below to see exactly what happens at that stage.</p>
+      <p class="text-light small mb-0">Click any step below to see exactly what happens at that stage.</p>
     </div>
 
     <div class="workflow-track" id="workflowTrack">
@@ -68,7 +68,7 @@
       <div class="card-body p-4">
         <div id="workflowDetailContent">
           <h5 class="fw-bold text-white mb-2"><i class="bi bi-person-plus text-info me-2"></i>Register / Login</h5>
-          <p class="text-muted mb-0">Create an account with your name, email, and password — or log back in if you already have one. Your session keeps you signed in across the app, including drafts, reports, and your admin/user role.</p>
+          <p class="text-light mb-0">Create an account with your name, email, and password — or log back in if you already have one. Your session keeps you signed in across the app, including drafts, reports, and your admin/user role.</p>
         </div>
       </div>
     </div>
@@ -139,12 +139,12 @@
 }
 .workflow-num {
   font-size: 0.7rem;
-  color: #6c757d;
+  color: #adb5bd;
   font-weight: 600;
 }
 .workflow-title {
   font-size: 0.85rem;
-  color: #e9ecef;
+  color: #ffffff;
   font-weight: 600;
   max-width: 110px;
 }
@@ -206,7 +206,7 @@
     const s = steps[stepNum];
     detailContent.innerHTML = `
       <h5 class="fw-bold text-white mb-2"><i class="bi ${s.icon} text-info me-2"></i>${s.title}</h5>
-      <p class="text-muted mb-0">${s.text}</p>
+      <p class="text-light mb-0">${s.text}</p>
     `;
   }
 
