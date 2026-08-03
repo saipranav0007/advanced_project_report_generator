@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}Template Library | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <div class="mb-4">
+      <h2 class="fw-bold mb-1"><i class="bi bi-grid text-info me-2"></i>Template Library</h2>
+      <p class="text-muted small mb-0">Select a pre-configured format for your document.</p>
+    </div>
+
+    <div class="row g-4">
+      {% if templates %}
+        {% for t in templates %}
+        <div class="col-md-6 col-xl-4">
+          <div class="card bg-secondary border-0 h-100 shadow-sm transition-hover">
+            <div class="card-body p-4 d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <i class="bi {{ t['icon'] }} display-6 text-{{ t['accent'] }}"></i>
+              </div>
+              <h5 class="fw-bold text-white">{{ t['name'] }}</h5>
+              <p class="text-muted small mb-4">{{ t['description'] }}</p>
+              <a href="{{ url_for('create_report', slug=t['slug']) }}" class="btn btn-outline-info w-100 mt-auto">Use Template</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12 text-center py-5 text-muted">
+          <i class="bi bi-exclamation-circle display-4 mb-3 opacity-25"></i>
+          <p>No templates found in the database. Please run the app once so init_db() seeds the defaults.</p>
+        </div>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

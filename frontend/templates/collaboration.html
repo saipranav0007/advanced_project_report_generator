@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block title %}Collaboration Hub | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <div class="mb-4">
+      <h2 class="fw-bold mb-1"><i class="bi bi-people text-info me-2"></i>Team Hub</h2>
+      <p class="text-muted small mb-0">Manage shared access and collaborate with peers.</p>
+    </div>
+
+    <!-- Reports I Own -->
+    <div class="card bg-secondary border-0 shadow-sm mb-5">
+      <div class="card-header bg-transparent border-bottom border-dark p-4">
+        <h5 class="fw-bold mb-0 text-white">Reports I am Sharing</h5>
+      </div>
+      <div class="card-body p-0">
+        {% if owned %}
+          <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0">
+              <thead class="text-muted small">
+                <tr>
+                  <th class="ps-4">Project Title</th>
+                  <th>Created On</th>
+                  <th>Collaborators</th>
+                  <th class="text-end pe-4">Manage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for report in owned %}
+                <tr>
+                  <td class="ps-4 fw-semibold text-white">{{ report.project_title }}</td>
+                  <td class="text-muted small">{{ report.created_at[:10] }}</td>
+                  <td>
+                    <span class="badge bg-dark border border-secondary text-light px-2 py-1">
+                      <i class="bi bi-person-check text-info me-1"></i> {{ report.collaborator_count }} users
+                    </span>
+                  </td>
+                  <td class="text-end pe-4">
+                    <a href="{{ url_for('share_report', report_id=report.id) }}" class="btn btn-sm btn-outline-info rounded-pill px-3">Manage Access</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="p-5 text-center text-muted">
+            <i class="bi bi-shield-lock display-4 mb-3 opacity-25"></i>
+            <p>You aren't sharing any of your reports yet.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Reports Shared With Me -->
+    <div class="card bg-secondary border-0 shadow-sm">
+      <div class="card-header bg-transparent border-bottom border-dark p-4">
+        <h5 class="fw-bold mb-0 text-white">Shared With Me</h5>
+      </div>
+      <div class="card-body p-0">
+        {% if shared_with_me %}
+          <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0">
+              <thead class="text-muted small">
+                <tr>
+                  <th class="ps-4">Project Title</th>
+                  <th>Owner</th>
+                  <th>My Role</th>
+                  <th class="text-end pe-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for shared in shared_with_me %}
+                <tr>
+                  <td class="ps-4 fw-semibold text-white">{{ shared.project_title }}</td>
+                  <td><span class="text-info">{{ shared.owner_name }}</span></td>
+                  <td>
+                    <span class="badge {% if shared.role == 'editor' %}bg-success{% else %}bg-primary{% endif %} rounded-pill">
+                      {{ shared.role | capitalize }}
+                    </span>
+                  </td>
+                  <td class="text-end pe-4">
+                    <a href="{{ url_for('preview_report', report_id=shared.id) }}" class="btn btn-sm btn-outline-light" title="View Document">
+                      <i class="bi bi-eye"></i> View
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="p-5 text-center text-muted">
+            <i class="bi bi-inbox display-4 mb-3 opacity-25"></i>
+            <p>No one has shared a report with you yet.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}

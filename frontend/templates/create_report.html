@@ -1,0 +1,278 @@
+{% extends "layout.html" %}
+
+{% block title %}Report Builder | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+      <div>
+        <h4 class="text-info small fw-bold mb-1">TEMPLATE-BASED</h4>
+        <h2 class="fw-bold mb-0" style="color:#ffffff !important;">Report Builder</h2>
+        <p class="text-muted small mb-0">Using template: <span class="badge bg-{{ template['accent'] }}">{{ template['name'] }}</span></p>
+      </div>
+      <div class="progress" style="width: 200px; height: 8px;">
+        <div class="progress-bar bg-info" id="formProgressBar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <form method="POST" id="reportForm" novalidate>
+      <input type="hidden" name="action" id="formAction" value="generate">
+      {% if draft_id %}<input type="hidden" name="draft_id" value="{{ draft_id }}">{% endif %}
+
+      <!-- Basic Details -->
+      <div class="card bg-secondary border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <h5 class="mb-3 text-white" style="color:#ffffff !important;"><i class="bi bi-person-vcard me-2 text-info"></i>Basic Details</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Project Title *</label>
+              <input type="text" class="form-control bg-dark border-0 text-light req-field" style="color:#ffffff !important;" name="project_title" required
+                     value="{{ draft.project_title if draft else '' }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Student Name *</label>
+              <input type="text" class="form-control bg-dark border-0 text-light req-field" style="color:#ffffff !important;" name="student_name" required
+                     value="{{ draft.student_name if draft else '' }}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Roll Number</label>
+              <input type="text" class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" name="roll_number"
+                     value="{{ draft.roll_number if draft else '' }}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Department</label>
+              <input type="text" class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" name="department"
+                     value="{{ draft.department if draft else (logged_in_user['department'] or '') }}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Branch</label>
+              <input type="text" class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" name="branch" placeholder="e.g. B.Tech CSE"
+                     value="{{ draft.branch if draft else '' }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">College</label>
+              <input type="text" class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" name="college"
+                     value="{{ draft.college if draft else (logged_in_user['college'] or '') }}">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Abstract -->
+      <div class="card bg-secondary border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-end mb-2">
+            <h5 class="mb-0 text-white" style="color:#ffffff !important;"><i class="bi bi-file-text me-2 text-info"></i>Abstract *</h5>
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-info ai-draft-btn" data-fields="abstract"><i class="bi bi-magic me-1"></i>Auto-Draft</button>
+              <button type="button" class="btn btn-sm btn-outline-info ai-polish-btn" data-fields="abstract"><i class="bi bi-stars me-1"></i>Polish</button>
+            </div>
+          </div>
+          <textarea class="form-control bg-dark border-0 text-light req-field" style="color:#ffffff !important;" rows="4" name="abstract" required>{{ draft.abstract if draft else '' }}</textarea>
+        </div>
+      </div>
+
+      <!-- Chapter 1 -->
+      <div class="card bg-secondary border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-end mb-3">
+            <h5 class="mb-0 text-white" style="color:#ffffff !important;"><i class="bi bi-1-circle me-2 text-info"></i>Chapter 1: Introduction</h5>
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-info ai-draft-btn" data-fields="introduction,problem_statement,objectives"><i class="bi bi-magic me-1"></i>Auto-Draft</button>
+              <button type="button" class="btn btn-sm btn-outline-info ai-polish-btn" data-fields="introduction,problem_statement,objectives"><i class="bi bi-stars me-1"></i>Polish</button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Introduction</label>
+            <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="4" name="introduction">{{ draft.introduction if draft else '' }}</textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Problem Statement</label>
+            <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="problem_statement">{{ draft.problem_statement if draft else '' }}</textarea>
+          </div>
+          <div class="mb-0">
+            <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Objectives</label>
+            <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="objectives">{{ draft.objectives if draft else '' }}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 2 -->
+      <div class="card bg-secondary border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-end mb-3">
+            <h5 class="mb-0 text-white" style="color:#ffffff !important;"><i class="bi bi-2-circle me-2 text-info"></i>Chapter 2: System Analysis</h5>
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-info ai-draft-btn" data-fields="existing_system,proposed_system,methodology"><i class="bi bi-magic me-1"></i>Auto-Draft</button>
+              <button type="button" class="btn btn-sm btn-outline-info ai-polish-btn" data-fields="existing_system,proposed_system,methodology"><i class="bi bi-stars me-1"></i>Polish</button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Existing System</label>
+            <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="existing_system">{{ draft.existing_system if draft else '' }}</textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Proposed System</label>
+            <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="proposed_system">{{ draft.proposed_system if draft else '' }}</textarea>
+          </div>
+          <div class="mb-0">
+            <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Methodology</label>
+            <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="methodology">{{ draft.methodology if draft else '' }}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 3 -->
+      <div class="card bg-secondary border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-end mb-3">
+            <h5 class="mb-0 text-white" style="color:#ffffff !important;"><i class="bi bi-3-circle me-2 text-info"></i>Chapter 3: Design &amp; Implementation</h5>
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-info ai-draft-btn" data-fields="modules,technologies"><i class="bi bi-magic me-1"></i>Auto-Draft</button>
+              <button type="button" class="btn btn-sm btn-outline-info ai-polish-btn" data-fields="modules,technologies"><i class="bi bi-stars me-1"></i>Polish</button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Modules</label>
+            <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="modules">{{ draft.modules if draft else '' }}</textarea>
+          </div>
+          <div class="mb-0">
+            <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Technologies Used</label>
+            <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="technologies">{{ draft.technologies if draft else '' }}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Closing -->
+      <div class="card bg-secondary border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-end mb-3">
+            <h5 class="mb-0 text-white" style="color:#ffffff !important;"><i class="bi bi-flag me-2 text-info"></i>Advantages, Limitations &amp; Conclusion</h5>
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-info ai-draft-btn" data-fields="advantages,limitations,future_scope,conclusion"><i class="bi bi-magic me-1"></i>Auto-Draft</button>
+              <button type="button" class="btn btn-sm btn-outline-info ai-polish-btn" data-fields="advantages,limitations,future_scope,conclusion"><i class="bi bi-stars me-1"></i>Polish</button>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Advantages</label>
+              <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="advantages">{{ draft.advantages if draft else '' }}</textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Limitations</label>
+              <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="limitations">{{ draft.limitations if draft else '' }}</textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Future Scope</label>
+              <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="future_scope">{{ draft.future_scope if draft else '' }}</textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">Conclusion</label>
+              <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="conclusion">{{ draft.conclusion if draft else '' }}</textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label text-light small fw-semibold" style="color:#ffffff !important;">References <span class="text-muted">(one per line)</span></label>
+              <textarea class="form-control bg-dark border-0 text-light" style="color:#ffffff !important;" rows="3" name="references">{{ draft.references if draft else '' }}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card bg-secondary border-0 shadow-sm p-3 d-flex flex-row flex-wrap gap-2 justify-content-end">
+        <button type="submit" class="btn btn-outline-light rounded-pill px-4" onclick="document.getElementById('formAction').value='save_draft'">
+          <i class="bi bi-save2 me-2"></i>Save Draft
+        </button>
+        <button type="submit" class="btn btn-outline-info rounded-pill px-4" onclick="document.getElementById('formAction').value='preview'">
+          <i class="bi bi-eye me-2"></i>Preview
+        </button>
+        <button type="submit" class="btn btn-gradient rounded-pill px-4" onclick="document.getElementById('formAction').value='generate'">
+          <i class="bi bi-magic me-2"></i>Generate Report
+        </button>
+      </div>
+    </form>
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  // Live progress bar
+  const form = document.getElementById('reportForm');
+  const bar = document.getElementById('formProgressBar');
+  const fields = form.querySelectorAll('input[type="text"], textarea');
+
+  function updateProgress() {
+    let filled = 0;
+    fields.forEach(f => { if (f.value.trim().length > 0) filled++; });
+    bar.style.width = Math.round((filled / fields.length) * 100) + '%';
+  }
+  fields.forEach(f => f.addEventListener('input', updateProgress));
+  updateProgress();
+
+  // Auto-Draft: simple templated starter text, not a real AI call
+  const draftTemplates = {
+    abstract: "This project addresses [problem] by developing [solution] using [key technology]. " +
+      "The system was designed to [main objective] and tested to confirm [expected outcome]. " +
+      "This approach offers [key benefit] compared to existing methods.",
+    introduction: "In recent years, [problem area] has become increasingly important due to [reason]. " +
+      "Existing approaches to this problem face limitations such as [limitation]. " +
+      "This project proposes [your solution] to address these gaps.",
+    problem_statement: "Despite existing solutions, [problem area] still suffers from [key gap or inefficiency]. " +
+      "This creates a need for a system that can [what is needed].",
+    objectives: "- Design and develop [system/feature]\n- Achieve [specific measurable goal]\n- Evaluate the system against [criteria/benchmark]",
+    existing_system: "The current system relies on [existing method/manual process], which results in [drawback such as delays, errors, or inefficiency].",
+    proposed_system: "The proposed system introduces [new approach/technology] to overcome the limitations of the existing system by [how it improves things].",
+    methodology: "The project follows a [methodology name, e.g. Agile/Waterfall] approach, involving stages such as [requirement analysis, design, development, testing].",
+    modules: "- [Module 1 name]: [brief description]\n- [Module 2 name]: [brief description]\n- [Module 3 name]: [brief description]",
+    technologies: "Frontend: [technology]\nBackend: [technology]\nDatabase: [technology]\nOther tools: [technology]",
+    advantages: "- [Advantage 1]\n- [Advantage 2]\n- [Advantage 3]",
+    limitations: "- [Limitation 1]\n- [Limitation 2]",
+    future_scope: "In the future, this system can be extended to [planned enhancement], enabling [additional benefit].",
+    conclusion: "This project successfully demonstrates [main achievement]. It addresses [problem] through [solution] and shows potential for [broader impact]."
+  };
+
+  document.querySelectorAll('.ai-draft-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fieldNames = btn.dataset.fields.split(',');
+      const hasContent = fieldNames.some(name => {
+        const textarea = form.querySelector(`[name="${name}"]`);
+        return textarea && textarea.value.trim();
+      });
+      if (hasContent && !confirm("Some fields already have content. Replace them with draft starters?")) return;
+
+      fieldNames.forEach(name => {
+        const textarea = form.querySelector(`[name="${name}"]`);
+        if (textarea) textarea.value = draftTemplates[name] || "";
+      });
+      updateProgress();
+    });
+  });
+
+  // Polish: light client-side cleanup (contractions, informal phrasing, spacing)
+  const polishRules = [
+    [/\bdon't\b/gi, "do not"], [/\bcan't\b/gi, "cannot"], [/\bwon't\b/gi, "will not"],
+    [/\bit's\b/gi, "it is"], [/\bwe're\b/gi, "we are"], [/\bI'm\b/gi, "the author is"],
+    [/\bbasically\b/gi, ""], [/\bstuff\b/gi, "components"], [/\bkind of\b/gi, ""],
+    [/\bgonna\b/gi, "going to"], [/\s{2,}/g, " "]
+  ];
+
+  document.querySelectorAll('.ai-polish-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fieldNames = btn.dataset.fields.split(',');
+      fieldNames.forEach(name => {
+        const textarea = form.querySelector(`[name="${name}"]`);
+        if (!textarea || !textarea.value.trim()) return;
+        let text = textarea.value;
+        polishRules.forEach(([pattern, replacement]) => { text = text.replace(pattern, replacement); });
+        textarea.value = text.trim();
+      });
+    });
+  });
+})();
+</script>
+{% endblock %} WhatsApp culture WhatsApp calls

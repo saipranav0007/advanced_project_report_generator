@@ -1,0 +1,98 @@
+/* Core Variables */
+:root {
+  --bg-dark: #0f172a;        /* Deep Slate */
+  --bg-secondary: #1e293b;   /* Slightly lighter slate */
+  --text-light: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-indigo: #6366f1;
+  --accent-cyan: #06b6d4;
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography & Accents */
+.text-gradient {
+  background: linear-gradient(90deg, var(--accent-indigo), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-info { color: var(--accent-cyan) !important; }
+.bg-dark { background-color: var(--bg-dark) !important; }
+.bg-secondary { background-color: var(--bg-secondary) !important; }
+
+/* Buttons */
+.btn-gradient {
+  background: linear-gradient(90deg, var(--accent-indigo), var(--accent-cyan));
+  color: white;
+  border: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-indigo));
+  color: white;
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-outline-info {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.btn-outline-info:hover {
+  background-color: var(--accent-cyan);
+  color: var(--bg-dark);
+}
+
+/* Glassmorphism Cards & Panels */
+.card, .auth-card {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 12px;
+}
+
+/* Navbar */
+.main-navbar {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.main-navbar .nav-link {
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.main-navbar .nav-link:hover {
+  color: var(--text-light);
+}
+
+/* Forms & Inputs */
+.form-control {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--text-light) !important;
+}
+
+.form-control:focus {
+  border-color: var(--accent-indigo) !important;
+  box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25) !important;
+}
+
+.form-control::placeholder {
+  color: rgba(148, 163, 184, 0.5) !important;
+}

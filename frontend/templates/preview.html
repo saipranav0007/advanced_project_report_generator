@@ -1,0 +1,160 @@
+{% extends "layout.html" %}
+{% block title %}Preview Report — Project Report Generator{% endblock %}
+{% block body_class %}page-app{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% set active_page = 'create_report' %}
+  {% include "_sidebar.html" %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <button class="btn btn-sm btn-outline-secondary d-lg-none mb-3" id="sidebarToggle"><i class="bi bi-list"></i> Menu</button>
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+      <div>
+        <h3 class="fw-bold mb-1">Report Preview</h3>
+        <p class="text-muted mb-0">This is how your generated document will look.</p>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        {% if report_id %}
+        <a href="{{ url_for('create_report') }}" class="btn btn-outline-secondary rounded-pill px-3">
+          <i class="bi bi-pencil me-2"></i>Edit
+        </a>
+        <a href="{{ url_for('ai_assistant_page', report_id=report_id) }}" class="btn btn-outline-info rounded-pill px-3">
+          <i class="bi bi-robot me-2"></i>Ask AI
+        </a>
+        <a href="{{ url_for('share_report', report_id=report_id) }}" class="btn btn-outline-success rounded-pill px-3">
+          <i class="bi bi-people me-2"></i>Share
+        </a>
+        <a href="{{ url_for('download_report', report_id=report_id, file_type='pdf') }}" class="btn btn-outline-danger rounded-pill px-3">
+          <i class="bi bi-file-earmark-pdf me-2"></i>Generate PDF
+        </a>
+        <a href="{{ url_for('download_report', report_id=report_id, file_type='docx') }}" class="btn btn-outline-primary rounded-pill px-3">
+          <i class="bi bi-file-earmark-word me-2"></i>Generate DOCX
+        </a>
+        <a href="{{ url_for('download_report', report_id=report_id, file_type='pdf') }}" class="btn btn-gradient rounded-pill px-3">
+          <i class="bi bi-download me-2"></i>Download
+        </a>
+        {% else %}
+        <span class="badge bg-warning text-dark align-self-center">Unsaved preview — click "Generate Report" on the form to save &amp; download</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="report-preview-paper">
+      <div class="report-page text-center">
+        <p class="mb-1">{{ data.get('college') or 'College Name' }}</p>
+        <p class="text-muted small mb-5">Department of {{ data.get('department') or 'Computer Science' }}</p>
+        <p class="mb-2">A Project Report on</p>
+        <h2 class="fw-bold text-gradient mb-4">{{ data.get('project_title') or 'Project Title' }}</h2>
+        <p class="text-muted mb-5">Submitted for the {{ data.get('project_type') or 'Mini Project' }} in partial fulfillment of the requirements of {{ data.get('branch') or 'B.Tech' }}</p>
+        <table class="table table-borderless w-auto mx-auto">
+          <tr><td class="fw-bold text-end pe-3">Submitted by:</td><td class="text-start">{{ data.get('student_name') or 'Student Name' }}</td></tr>
+          <tr><td class="fw-bold text-end pe-3">Roll Number:</td><td class="text-start">{{ data.get('roll_number') or '-' }}</td></tr>
+          <tr><td class="fw-bold text-end pe-3">Guide:</td><td class="text-start">{{ data.get('guide_name') or '-' }}</td></tr>
+          <tr><td class="fw-bold text-end pe-3">Academic Year:</td><td class="text-start">{{ data.get('academic_year') or '-' }}</td></tr>
+        </table>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">CERTIFICATE</h4>
+        <p>This is to certify that <strong>{{ data.get('student_name') or 'Student Name' }}</strong>
+          (Roll No: {{ data.get('roll_number') or '-' }}) of the Department of {{ data.get('department') or '-' }},
+          {{ data.get('college') or '-' }}, has successfully completed the {{ data.get('project_type') or 'Mini Project' }}
+          titled "<strong>{{ data.get('project_title') or '-' }}</strong>" during the academic year
+          {{ data.get('academic_year') or '-' }} under my/our guidance, in partial fulfillment of the
+          requirements for the degree of {{ data.get('branch') or 'B.Tech' }}.</p>
+        <p class="mt-4 mb-0">Guide: {{ data.get('guide_name') or '-' }}</p>
+        <p>Head of Department</p>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">ACKNOWLEDGEMENT</h4>
+        <p>I would like to express my sincere gratitude to my guide, {{ data.get('guide_name') or 'my guide' }},
+          for the continuous support, guidance and encouragement throughout this {{ data.get('project_type') or 'project' }}.
+          I am also thankful to the Department of {{ data.get('department') or '-' }} and
+          {{ data.get('college') or 'my college' }} for providing the resources and opportunity to carry out this work.</p>
+        <p class="mt-3 mb-0">{{ data.get('student_name') or 'Student Name' }}</p>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">ABSTRACT</h4>
+        <p>{{ data.get('abstract') or 'Not specified.' }}</p>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">TABLE OF CONTENTS</h4>
+        <ol class="report-toc">
+          <li>Certificate</li><li>Acknowledgement</li><li>Abstract</li>
+          <li>Chapter 1: Introduction</li>
+          <li>Chapter 2: System Analysis</li>
+          <li>Chapter 3: System Design &amp; Implementation</li>
+          <li>Advantages &amp; Limitations</li><li>Future Scope</li>
+          <li>Conclusion</li><li>References</li><li>Appendix</li>
+        </ol>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">Chapter 1: Introduction</h4>
+        <h6 class="report-subheading">1.1 Introduction</h6>
+        <p>{{ data.get('introduction') or 'Not specified.' }}</p>
+        <h6 class="report-subheading">1.2 Problem Statement</h6>
+        <p>{{ data.get('problem_statement') or 'Not specified.' }}</p>
+        <h6 class="report-subheading">1.3 Objectives</h6>
+        <p>{{ data.get('objectives') or 'Not specified.' }}</p>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">Chapter 2: System Analysis</h4>
+        <h6 class="report-subheading">2.1 Existing System</h6>
+        <p>{{ data.get('existing_system') or 'Not specified.' }}</p>
+        <h6 class="report-subheading">2.2 Proposed System</h6>
+        <p>{{ data.get('proposed_system') or 'Not specified.' }}</p>
+        <h6 class="report-subheading">2.3 Methodology</h6>
+        <p>{{ data.get('methodology') or 'Not specified.' }}</p>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">Chapter 3: System Design &amp; Implementation</h4>
+        <h6 class="report-subheading">3.1 Modules</h6>
+        <p>{{ data.get('modules') or 'Not specified.' }}</p>
+        <h6 class="report-subheading">3.2 Technologies Used</h6>
+        <p>{{ data.get('technologies') or 'Not specified.' }}</p>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">Advantages &amp; Limitations</h4>
+        <h6 class="report-subheading">Advantages</h6>
+        <p>{{ data.get('advantages') or 'Not specified.' }}</p>
+        <h6 class="report-subheading">Limitations</h6>
+        <p>{{ data.get('limitations') or 'Not specified.' }}</p>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">Future Scope</h4>
+        <p>{{ data.get('future_scope') or 'Not specified.' }}</p>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">Conclusion</h4>
+        <p>{{ data.get('conclusion') or 'Not specified.' }}</p>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">References</h4>
+        {% set refs = (data.get('references') or '1. No references provided.').split('\n') %}
+        <ol class="report-toc">
+          {% for r in refs %}
+            {% if r.strip() %}<li>{{ r.strip() }}</li>{% endif %}
+          {% endfor %}
+        </ol>
+      </div>
+
+      <div class="report-page">
+        <h4 class="report-heading">Appendix</h4>
+        <p>Supporting screenshots, code snippets and additional material referenced in this report can be attached here.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

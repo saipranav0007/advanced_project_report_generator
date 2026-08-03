@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="{{ 'dark' if logged_in_user and logged_in_user['dark_mode'] else 'light' }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Project Report Generator{% endblock %}</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.png') }}">
+
+<!-- Bootstrap 5 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+{% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+<!-- Loading Screen -->
+<div id="loading-screen">
+  <div class="loader-ring"></div>
+  <p>Loading Project Report Generator...</p>
+</div>
+
+<!-- Top progress bar for page transitions -->
+<div id="page-progress"></div>
+
+<!-- ============ NAVBAR ============ -->
+<nav class="navbar navbar-expand-lg sticky-top main-navbar">
+  <div class="container-fluid px-lg-5">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+      <span class="brand-icon"><i class="bi bi-file-earmark-richtext-fill"></i></span>
+      <span class="brand-text">Report<span class="text-gradient">Gen</span></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}"><i class="bi bi-house-door me-1"></i>Home</a></li>
+        {% if logged_in_user %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('templates_gallery') }}"><i class="bi bi-grid me-1"></i>Templates</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('my_reports') }}"><i class="bi bi-folder2-open me-1"></i>Reports</a></li>
+        <!-- NEW: quick search box -->
+        <li class="nav-item">
+          <form class="d-flex" role="search" action="{{ url_for('search') }}" method="get">
+            <input class="form-control form-control-sm navbar-search" type="search" name="q" placeholder="Search...">
+          </form>
+        </li>
+        <!-- NEW: notification bell with unread badge -->
+        <li class="nav-item">
+          <a class="nav-link position-relative" href="{{ url_for('notifications') }}" title="Notifications">
+            <i class="bi bi-bell"></i>
+            {% if unread_notifications is defined and unread_notifications and unread_notifications > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ unread_notifications }}
+            </span>
+            {% endif %}
+          </a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}"><i class="bi bi-person-circle me-1"></i>Profile</a></li>
+        {% if logged_in_user['is_admin'] %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-shield-lock me-1"></i>Admin</a></li>
+        {% endif %}
+        <li class="nav-item ms-lg-2">
+          <a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="{{ url_for('logout') }}">
+            <i class="bi bi-box-arrow-right me-1"></i>Logout
+          </a>
+        </li>
+        {% else %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+        <li class="nav-item">
+          <a class="btn btn-gradient btn-sm rounded-pill px-4 ms-lg-2" href="{{ url_for('register') }}">
+            Get Started
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ FLASH MESSAGES ============ -->
+<div class="flash-container container mt-3">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'danger' else category }} alert-dismissible fade show shadow-sm" role="alert">
+          <i class="bi bi-{{ 'check-circle' if category=='success' else 'exclamation-triangle' if category in ['danger','warning'] else 'info-circle' }} me-2"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
+
+<!-- ============ MAIN CONTENT ============ -->
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ============ FOOTER (appears on every page) ============ -->
+<footer class="site-footer mt-auto">
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <h5 class="footer-brand"><i class="bi bi-file-earmark-richtext-fill me-2"></i>Project Report Generator</h5>
+        <p class="text-white-50 small mb-0">Template-Based project report generation for students — build professional, college-formatted reports in minutes.</p>
+      </div>
+      <div class="col-lg-4">
+        <h6 class="text-uppercase fw-semibold mb-3 text-white-50">Developed Using</h6>
+        <ul class="list-unstyled footer-tech small">
+          <li><i class="bi bi-check2-circle text-success me-2"></i>HTML5</li>
+          <li><i class="bi bi-check2-circle text-success me-2"></i>CSS3</li>
+          <li><i class="bi bi-check2-circle text-success me-2"></i>Bootstrap 5</li>
+          <li><i class="bi bi-check2-circle text-success me-2"></i>JavaScript</li>
+          <li><i class="bi bi-check2-circle text-success me-2"></i>Python Flask</li>
+          <li><i class="bi bi-check2-circle text-success me-2"></i>SQLite</li>
+          <li><i class="bi bi-check2-circle text-success me-2"></i>ReportLab</li>
+          <li><i class="bi bi-check2-circle text-success me-2"></i>python-docx</li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <h6 class="text-uppercase fw-semibold mb-3 text-white-50">Quick Links</h6>
+        <ul class="list-unstyled small footer-links">
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+          <li><a href="{{ url_for('register') }}">Register</a></li>
+          {% if logged_in_user %}<li><a href="{{ url_for('templates_gallery') }}">Templates</a></li>{% endif %}
+        </ul>
+      </div>
+    </div>
+    <hr class="border-secondary mt-4 mb-3">
+    <p class="text-center text-white-50 small mb-0">&copy; {{ current_year }} Project Report Generator. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,194 @@
+{% extends "layout.html" %}
+{% block title %}Project Report Generator — Home{% endblock %}
+{% block body_class %}page-home{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero-section">
+  <div class="hero-shape hero-shape-1"></div>
+  <div class="hero-shape hero-shape-2"></div>
+  <div class="container position-relative">
+    <div class="row align-items-center min-vh-hero">
+      <div class="col-lg-6 text-center text-lg-start" data-aos>
+        <span class="badge-pill mb-3"><i class="bi bi-stars me-1"></i>Built for B.Tech Students</span>
+        <h1 class="hero-title">Generate Professional <span class="text-gradient">Project Reports</span> in Minutes</h1>
+        <p class="hero-sub">Pick a template, fill in your project details, and instantly download a college-formatted PDF or editable Word document — cover page, certificate, chapters and references included.</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start mt-4">
+          {% if logged_in_user %}
+          <a href="{{ url_for('create_report') }}" class="btn btn-gradient btn-lg rounded-pill px-4"><i class="bi bi-rocket-takeoff me-2"></i>Get Started</a>
+          {% else %}
+          <a href="{{ url_for('register') }}" class="btn btn-gradient btn-lg rounded-pill px-4"><i class="bi bi-rocket-takeoff me-2"></i>Get Started</a>
+          <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg rounded-pill px-4 text-dark border-2"><i class="bi bi-box-arrow-in-right me-2"></i>Login</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-6 mt-5 mt-lg-0">
+        <div class="hero-card-stack">
+          <div class="floating-card card-1"><i class="bi bi-file-earmark-pdf-fill"></i><span>PDF Export</span></div>
+          <div class="floating-card card-2"><i class="bi bi-file-earmark-word-fill"></i><span>DOCX Export</span></div>
+          <div class="floating-card card-3"><i class="bi bi-layout-text-window-reverse"></i><span>6 Templates</span></div>
+          <div class="hero-illustration">
+            <i class="bi bi-file-earmark-richtext-fill"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRODUCTION -->
+<section class="py-5 section-alt">
+  <div class="container py-4">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="section-tag">Project Introduction</span>
+        <h2 class="section-title">A Smarter Way to Write Your Project Report</h2>
+        <p class="section-text">Every semester, students spend hours formatting cover pages, certificates and chapters instead of focusing on their actual project work. Project Report Generator solves this by combining ready-made academic templates with an automated document engine — so you can go from raw content to a submission-ready report in a few clicks.</p>
+        <p class="section-text">Whether it's a Mini Project, Major Project, Internship Report, or Research Paper, our system produces consistently formatted, professional documents every time.</p>
+      </div>
+      <div class="col-lg-6">
+        <div class="intro-grid">
+          <div class="intro-box"><i class="bi bi-lightning-charge-fill"></i><h6>Fast</h6><p>Generate a full report in under a minute.</p></div>
+          <div class="intro-box"><i class="bi bi-palette-fill"></i><h6>Consistent</h6><p>College-standard formatting every time.</p></div>
+          <div class="intro-box"><i class="bi bi-shield-check"></i><h6>Reliable</h6><p>Your drafts and reports are safely stored.</p></div>
+          <div class="intro-box"><i class="bi bi-phone"></i><h6>Responsive</h6><p>Works smoothly on desktop and mobile.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="py-5">
+  <div class="container py-4">
+    <div class="text-center mb-5" data-aos>
+      <span class="section-tag">Features</span>
+      <h2 class="section-title">Everything You Need to Submit With Confidence</h2>
+    </div>
+    <div class="row g-4">
+      {% set features = [
+        ("bi-layout-text-window-reverse", "Template Gallery", "6 ready-made academic templates for every kind of submission."),
+        ("bi-pencil-square", "Guided Report Builder", "Structured form covering every chapter your report needs."),
+        ("bi-file-earmark-pdf", "PDF Generation", "Beautiful, college-style PDF with headers, footers and page numbers."),
+        ("bi-file-earmark-word", "DOCX Generation", "Fully editable Word document generated instantly."),
+        ("bi-save2", "Save as Draft", "Pick up right where you left off, anytime."),
+        ("bi-moon-stars", "Dark Mode", "A comfortable, modern reading experience day or night."),
+      ] %}
+      {% for icon, title, desc in features %}
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card h-100">
+          <div class="feature-icon"><i class="bi {{ icon }}"></i></div>
+          <h5>{{ title }}</h5>
+          <p>{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="py-5 section-alt">
+  <div class="container py-4">
+    <div class="text-center mb-5">
+      <span class="section-tag">How It Works</span>
+      <h2 class="section-title">Four Simple Steps</h2>
+    </div>
+    <div class="row g-4 text-center">
+      {% set steps = [
+        ("1", "bi-person-plus", "Create an Account", "Sign up in seconds with your name and email."),
+        ("2", "bi-grid-3x3-gap", "Choose a Template", "Select the report type that matches your submission."),
+        ("3", "bi-ui-checks", "Fill in Your Details", "Enter your project content chapter by chapter."),
+        ("4", "bi-download", "Download Your Report", "Export a polished PDF or DOCX instantly."),
+      ] %}
+      {% for num, icon, title, desc in steps %}
+      <div class="col-md-6 col-lg-3">
+        <div class="step-card">
+          <div class="step-number">{{ num }}</div>
+          <div class="step-icon"><i class="bi {{ icon }}"></i></div>
+          <h6>{{ title }}</h6>
+          <p>{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- STATISTICS -->
+<section class="py-5 stats-section">
+  <div class="container py-4">
+    <div class="row g-4 text-center">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <i class="bi bi-file-earmark-richtext"></i>
+          <h3 class="counter" data-target="{{ stats.reports }}">0</h3>
+          <p>Reports Generated</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <i class="bi bi-people"></i>
+          <h3 class="counter" data-target="{{ stats.users }}">0</h3>
+          <p>Registered Students</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <i class="bi bi-grid"></i>
+          <h3 class="counter" data-target="{{ stats.templates }}">0</h3>
+          <p>Templates Available</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <i class="bi bi-download"></i>
+          <h3 class="counter" data-target="{{ stats.downloads }}">0</h3>
+          <p>Downloads</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNOLOGIES -->
+<section class="py-5">
+  <div class="container py-4">
+    <div class="text-center mb-5">
+      <span class="section-tag">Technologies Used</span>
+      <h2 class="section-title">Built With a Modern, Reliable Stack</h2>
+    </div>
+    <div class="row g-3 justify-content-center">
+      {% set techs = [
+        ("bi-filetype-html", "HTML5"), ("bi-filetype-css", "CSS3"),
+        ("bi-bootstrap-fill", "Bootstrap 5"), ("bi-filetype-js", "JavaScript"),
+        ("bi-server", "Flask"), ("bi-database-fill", "SQLite"),
+        ("bi-file-earmark-pdf-fill", "ReportLab"), ("bi-file-earmark-word-fill", "python-docx"),
+      ] %}
+      {% for icon, name in techs %}
+      <div class="col-4 col-md-3 col-lg-2">
+        <div class="tech-chip">
+          <i class="bi {{ icon }}"></i>
+          <span>{{ name }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 cta-section">
+  <div class="container text-center py-4">
+    <h2 class="text-white mb-3">Ready to build your project report?</h2>
+    <p class="text-white-50 mb-4">Join now and generate your first report in minutes — completely free.</p>
+    {% if logged_in_user %}
+    <a href="{{ url_for('create_report') }}" class="btn btn-light btn-lg rounded-pill px-5">Create a Report</a>
+    {% else %}
+    <a href="{{ url_for('register') }}" class="btn btn-light btn-lg rounded-pill px-5">Register Now</a>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

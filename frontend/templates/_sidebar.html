@@ -1,0 +1,88 @@
+<aside class="app-sidebar" id="appSidebar">
+  <div class="sidebar-user">
+    <img src="{{ url_for('static', filename='images/' ~ logged_in_user['photo']) if logged_in_user and logged_in_user['photo'] else url_for('static', filename='images/default_avatar.png') }}"
+         onerror="this.src='{{ url_for('static', filename='images/default_avatar.png') }}'"
+         class="sidebar-avatar"
+         alt="avatar">
+    <div>
+      <h6 class="mb-0 text-white">{{ logged_in_user['name'] if logged_in_user else 'Guest User' }}</h6>
+      <span class="text-muted small">{{ logged_in_user['department'] if logged_in_user else 'Student' }}</span>
+    </div>
+  </div>
+
+  <p class="sidebar-group-label">Workspace</p>
+  <ul class="sidebar-nav mb-3">
+    <li class="{% if active_page == 'dashboard' %}active{% endif %}">
+      <a href="{{ url_for('dashboard') }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+    </li>
+    <li class="{% if active_page == 'create_report' %}active{% endif %}">
+      <a href="{{ url_for('create_report') }}"><i class="bi bi-file-earmark-plus"></i> Report Builder</a>
+    </li>
+    <li class="{% if active_page == 'reports' %}active{% endif %}">
+      <a href="{{ url_for('my_reports') }}"><i class="bi bi-folder2-open"></i> My Reports</a>
+    </li>
+    <li class="{% if active_page == 'templates' %}active{% endif %}">
+      <a href="{{ url_for('templates_gallery') }}"><i class="bi bi-grid"></i> Templates</a>
+    </li>
+    <li class="{% if active_page == 'downloads' %}active{% endif %}">
+      <a href="{{ url_for('downloads') }}"><i class="bi bi-download"></i> Downloads</a>
+    </li>
+    <li class="{% if active_page == 'ai_assistant' %}active{% endif %}">
+      <a href="{{ url_for('ai_assistant_page') }}"><i class="bi bi-robot"></i> AI Assistant</a>
+    </li>
+  </ul>
+
+  <p class="sidebar-group-label">Discover</p>
+  <ul class="sidebar-nav mb-3">
+    <li class="{% if active_page == 'search' %}active{% endif %}">
+      <a href="{{ url_for('search') }}"><i class="bi bi-search"></i> Search</a>
+    </li>
+    <li class="{% if active_page == 'analytics' %}active{% endif %}">
+      <a href="{{ url_for('analytics') }}"><i class="bi bi-bar-chart-line"></i> Analytics</a>
+    </li>
+    <li class="{% if active_page == 'notifications' %}active{% endif %}">
+      <a href="{{ url_for('notifications') }}">
+        <i class="bi bi-bell"></i> Notifications
+        {% if unread_notifications and unread_notifications > 0 %}
+        <span class="badge rounded-pill bg-danger ms-auto">{{ unread_notifications }}</span>
+        {% endif %}
+      </a>
+    </li>
+  </ul>
+
+  <p class="sidebar-group-label">Collaborate</p>
+  <ul class="sidebar-nav mb-3">
+    <li class="{% if active_page == 'collaboration' %}active{% endif %}">
+      <a href="{{ url_for('collaboration_hub') }}"><i class="bi bi-people"></i> Team Hub</a>
+    </li>
+  </ul>
+
+  {% if logged_in_user and logged_in_user['is_admin'] %}
+  <p class="sidebar-group-label">Admin</p>
+  <ul class="sidebar-nav mb-3">
+    <li class="{% if active_page == 'admin' %}active{% endif %}">
+      <a href="{{ url_for('admin_dashboard') }}"><i class="bi bi-shield-lock"></i> Admin Panel</a>
+    </li>
+  </ul>
+  {% endif %}
+
+  <div class="sidebar-bottom-group mt-auto pt-3 border-top border-dark">
+    <ul class="sidebar-nav">
+        <li class="{% if active_page == 'profile' %}active{% endif %}">
+          <a href="{{ url_for('profile') }}"><i class="bi bi-person"></i> Profile</a>
+        </li>
+        <li class="{% if active_page == 'settings' %}active{% endif %}">
+          <a href="{{ url_for('settings') }}"><i class="bi bi-gear"></i> Settings</a>
+        </li>
+        <li class="{% if active_page == 'help' %}active{% endif %}">
+          <a href="{{ url_for('help_page') }}"><i class="bi bi-question-circle"></i> Help</a>
+        </li>
+        <li class="{% if active_page == 'trash' %}active{% endif %}">
+          <a href="{{ url_for('trash') }}"><i class="bi bi-trash"></i> Trash</a>
+        </li>
+        <li>
+          <a href="{{ url_for('logout') }}" class="text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+        </li>
+    </ul>
+  </div>
+</aside>

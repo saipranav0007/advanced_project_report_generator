@@ -1,0 +1,79 @@
+/* frontend/static/css/responsive.css */
+
+/* Tablet & Smaller Devices */
+@media (max-width: 991.98px) {
+  .dashboard-wrapper {
+    flex-direction: column;
+  }
+  
+  /* Sidebar adjustments for mobile */
+  .app-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .sidebar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .sidebar-nav li {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+  
+  .sidebar-nav a {
+    justify-content: center;
+    padding: 0.75rem;
+  }
+  
+  /* Reset max-height on main content so it scrolls naturally */
+  .main-content {
+    max-height: none !important;
+    height: auto;
+    overflow-y: visible;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 767.98px) {
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .card-body {
+    padding: 1.25rem !important;
+  }
+  
+  /* Stack action buttons on mobile */
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .btn-group .btn {
+    border-radius: 0.25rem !important;
+    width: 100%;
+  }
+  
+  /* Force tables to be scrollable horizontally */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+  }
+  
+  /* Stack forms */
+  form .row > div {
+    margin-bottom: 1rem;
+  }
+}

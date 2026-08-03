@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block title %}Trash | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+      <div>
+        <h2 class="fw-bold mb-1"><i class="bi bi-trash text-danger me-2"></i>Trash</h2>
+        <p class="text-muted small mb-0">Restore a report, or delete it permanently.</p>
+      </div>
+      {% if reports %}
+      <form action="{{ url_for('empty_trash') }}" method="POST" onsubmit="return confirm('Permanently delete everything in Trash? This cannot be undone.');">
+        <button type="submit" class="btn btn-outline-danger rounded-pill px-4">
+          Empty Trash
+        </button>
+      </form>
+      {% endif %}
+    </div>
+
+    <div class="card bg-secondary border-0 shadow-sm flex-grow-1">
+      <div class="card-body p-0">
+        {% if reports %}
+          <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0">
+              <thead class="text-muted small">
+                <tr>
+                  <th class="ps-4">Project Title</th>
+                  <th>Deleted On</th>
+                  <th class="text-end pe-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for report in reports %}
+                <tr>
+                  <td class="ps-4 text-muted text-decoration-line-through">{{ report.project_title }}</td>
+                  <td class="text-muted small">{{ report.deleted_at[:10] if report.deleted_at else '-' }}</td>
+                  <td class="text-end pe-4">
+                    <div class="btn-group">
+                      <form action="{{ url_for('restore_report', report_id=report.id) }}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-success" title="Restore">
+                          <i class="bi bi-arrow-counterclockwise"></i> Restore
+                        </button>
+                      </form>
+                      <form action="{{ url_for('delete_permanently', report_id=report.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Permanently delete this report? This cannot be undone.');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Permanently">
+                          <i class="bi bi-x-circle"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="text-center text-muted py-5">
+            <i class="bi bi-trash display-1 mb-3 opacity-25"></i>
+            <p>Your trash is empty.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

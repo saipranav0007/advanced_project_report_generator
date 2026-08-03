@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}Help & Support | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <div class="mb-4">
+      <h2 class="fw-bold mb-1"><i class="bi bi-question-circle text-info me-2"></i>Help & Support</h2>
+      <p class="text-muted small mb-0">Learn how to make the most out of the report generator.</p>
+    </div>
+    
+    <div class="accordion accordion-flush bg-transparent" id="helpAccordion">
+      <div class="accordion-item bg-secondary border-dark mb-3 rounded shadow-sm">
+        <h2 class="accordion-header">
+          <button class="accordion-button bg-secondary text-light collapsed rounded" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+            How do I generate a report?
+          </button>
+        </h2>
+        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+          <div class="accordion-body text-muted">
+            Navigate to the <strong>Report Builder</strong> tab. Fill out the required fields such as your project title, team members, and abstract. You can use the AI Assistant to help draft sections. Once complete, click "Generate Report" to preview and download your formatted file.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item bg-secondary border-dark mb-3 rounded shadow-sm">
+        <h2 class="accordion-header">
+          <button class="accordion-button bg-secondary text-light collapsed rounded" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+            How does the AI Assistant work?
+          </button>
+        </h2>
+        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+          <div class="accordion-body text-muted">
+            The AI Assistant is available both in the Report Builder and as a standalone chat tool. It can help you expand bullet points, fix grammar, or structure your methodology section. Just select your project context from the dropdown in the AI Assistant tab so it knows what you are working on.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item bg-secondary border-dark rounded shadow-sm">
+        <h2 class="accordion-header">
+          <button class="accordion-button bg-secondary text-light collapsed rounded" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+            Can I edit a downloaded report?
+          </button>
+        </h2>
+        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+          <div class="accordion-body text-muted">
+            Yes! If you download your report as a <strong>DOCX</strong> file, it is fully editable in Microsoft Word or Google Docs. The PDF version is locked and ideal for final submission.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

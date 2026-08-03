@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block title %}AI Assistant | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 bg-dark text-light d-flex flex-column" style="max-height: calc(100vh - 72px);">
+
+    <div class="mb-3 d-flex justify-content-between align-items-center flex-shrink-0">
+      <div>
+        <h2 class="fw-bold mb-0"><i class="bi bi-robot text-info me-2"></i>AI Assistant</h2>
+        <p class="text-muted small mb-0">Ask for help drafting, formatting, or reviewing your report.</p>
+      </div>
+
+      {% if my_reports %}
+      <select id="chatContextSelect" class="form-select bg-secondary border-0 text-light w-auto shadow-sm">
+        <option value="">-- General Chat --</option>
+        {% for r in my_reports %}
+        <option value="{{ r.id }}" {% if report and report.id == r.id %}selected{% endif %}>
+          Context: {{ r.project_title }}
+        </option>
+        {% endfor %}
+      </select>
+      {% endif %}
+    </div>
+
+    <div class="card bg-secondary border-0 shadow-sm flex-grow-1 overflow-hidden d-flex flex-column mb-3">
+      <div class="card-body overflow-auto p-4 d-flex flex-column gap-3" id="chatBox">
+        <div class="d-flex gap-3">
+          <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">
+            <i class="bi bi-robot text-white"></i>
+          </div>
+          <div class="bg-dark p-3 rounded-3 shadow-sm text-light border border-secondary" style="max-width: 75%;">
+            Hello! I am your AI writing assistant. {% if report %}I see we are working on "<strong>{{ report.project_title }}</strong>". {% endif %}How can I help you format or draft your sections today?
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form id="chatForm" class="flex-shrink-0 d-flex gap-2">
+      <input type="text" id="chatInput" class="form-control bg-secondary border-0 text-light py-3 px-4 shadow-sm" placeholder="Ask me to rewrite an introduction, check grammar, or explain formatting..." autocomplete="off" required>
+      <button type="submit" class="btn btn-gradient rounded px-4 shadow-sm" id="chatSubmitBtn">
+        <i class="bi bi-send-fill"></i>
+      </button>
+    </form>
+
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const chatBox = document.getElementById('chatBox');
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
+  const submitBtn = document.getElementById('chatSubmitBtn');
+  const contextSelect = document.getElementById('chatContextSelect');
+
+  function scrollToBottom() {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function appendMessage(text, role) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'd-flex gap-3' + (role === 'user' ? ' flex-row-reverse' : '');
+
+    const avatar = document.createElement('div');
+    avatar.className = (role === 'user' ? 'bg-secondary' : 'bg-primary') +
+      ' rounded-circle d-flex align-items-center justify-content-center flex-shrink-0';
+    avatar.style.width = '40px';
+    avatar.style.height = '40px';
+    avatar.innerHTML = role === 'user'
+      ? '<i class="bi bi-person-fill text-white"></i>'
+      : '<i class="bi bi-robot text-white"></i>';
+
+    const bubble = document.createElement('div');
+    bubble.className = (role === 'user' ? 'bg-primary text-white' : 'bg-dark text-light border border-secondary') +
+      ' p-3 rounded-3 shadow-sm';
+    bubble.style.maxWidth = '75%';
+    bubble.style.whiteSpace = 'pre-wrap';
+    bubble.textContent = text;
+
+    wrapper.appendChild(avatar);
+    wrapper.appendChild(bubble);
+    chatBox.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  function appendTyping() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'd-flex gap-3';
+    wrapper.id = 'typingIndicator';
+    wrapper.innerHTML = `
+      <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
+        <i class="bi bi-robot text-white"></i>
+      </div>
+      <div class="bg-dark p-3 rounded-3 shadow-sm text-muted border border-secondary">
+        <i class="bi bi-three-dots"></i> thinking...
+      </div>`;
+    chatBox.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  function removeTyping() {
+    const el = document.getElementById('typingIndicator');
+    if (el) el.remove();
+  }
+
+  chatForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    appendMessage(message, 'user');
+    chatInput.value = '';
+    submitBtn.disabled = true;
+    appendTyping();
+
+    const reportId = contextSelect ? (contextSelect.value || null) : null;
+
+    try {
+      const res = await fetch("{{ url_for('api_chat') }}", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: message, report_id: reportId })
+      });
+      const data = await res.json();
+      removeTyping();
+      if (data.reply) {
+        appendMessage(data.reply, 'bot');
+      } else {
+        appendMessage("Sorry, something went wrong. Please try again.", 'bot');
+      }
+    } catch (err) {
+      removeTyping();
+      appendMessage("Connection error — please check your network and try again.", 'bot');
+    } finally {
+      submitBtn.disabled = false;
+      chatInput.focus();
+    }
+  });
+})();
+</script>
+{% endblock %}

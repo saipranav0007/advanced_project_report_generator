@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+
+{% block title %}Analytics | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <div class="mb-4">
+      <h2 class="fw-bold mb-1"><i class="bi bi-graph-up text-info me-2"></i>Analytics Overview</h2>
+      <p class="text-muted small mb-0">Your report generation activity at a glance.</p>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="card bg-secondary border-0 shadow-sm p-3">
+          <div class="text-info small text-uppercase fw-semibold mb-2">Reports Generated</div>
+          <h3 class="fw-bold text-white mb-0">{{ over_time | sum(attribute='c') if over_time else 0 }}</h3>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-secondary border-0 shadow-sm p-3">
+          <div class="text-success small text-uppercase fw-semibold mb-2">Total Downloads</div>
+          <h3 class="fw-bold text-white mb-0">{{ by_format | sum(attribute='c') if by_format else 0 }}</h3>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-secondary border-0 shadow-sm p-3">
+          <div class="text-warning small text-uppercase fw-semibold mb-2">AI Assistant Messages</div>
+          <h3 class="fw-bold text-white mb-0">{{ chat_count }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="card bg-secondary border-0 shadow-sm h-100">
+          <div class="card-header bg-transparent border-bottom border-dark p-4">
+            <h5 class="fw-bold text-white mb-0">Reports Over Time</h5>
+          </div>
+          <div class="card-body p-4">
+            {% if over_time %}
+              <canvas id="overTimeChart" height="120"></canvas>
+            {% else %}
+              <div class="text-center text-muted py-5">
+                <i class="bi bi-bar-chart display-4 mb-3 opacity-25"></i>
+                <p class="mb-0">Chart data will populate as you generate more reports.</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card bg-secondary border-0 shadow-sm h-100">
+          <div class="card-header bg-transparent border-bottom border-dark p-4">
+            <h5 class="fw-bold text-white mb-0">Template Usage</h5>
+          </div>
+          <div class="card-body p-4">
+            {% if by_category %}
+              <canvas id="categoryChart"></canvas>
+            {% else %}
+              <div class="text-center text-muted py-4">
+                <i class="bi bi-pie-chart display-6 mb-2 opacity-25"></i>
+                <p class="mb-0 small">No reports yet.</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if by_format %}
+    <div class="card bg-secondary border-0 shadow-sm mt-4">
+      <div class="card-header bg-transparent border-bottom border-dark p-4">
+        <h5 class="fw-bold text-white mb-0">Downloads by Format</h5>
+      </div>
+      <div class="card-body p-4">
+        <ul class="list-group list-group-flush bg-transparent">
+          {% for f in by_format %}
+          <li class="list-group-item bg-transparent border-dark d-flex justify-content-between align-items-center px-0">
+            <span class="text-light text-uppercase">{{ f.file_type }}</span>
+            <span class="badge bg-info rounded-pill">{{ f.c }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script>
+{% if over_time %}
+new Chart(document.getElementById('overTimeChart'), {
+    type: 'line',
+    data: {
+        labels: [{% for row in over_time %}"{{ row['day'] }}"{% if not loop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Reports Created',
+            data: [{% for row in over_time %}{{ row['c'] }}{% if not loop.last %},{% endif %}{% endfor %}],
+            borderColor: '#0dcaf0',
+            backgroundColor: 'rgba(13,202,240,0.15)',
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        plugins: { legend: { labels: { color: '#e9ecef' } } },
+        scales: {
+            x: { ticks: { color: '#adb5bd' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { ticks: { color: '#adb5bd', precision: 0 }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
+    }
+});
+{% endif %}
+
+{% if by_category %}
+new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+        labels: [{% for row in by_category %}"{{ row['name'] }}"{% if not loop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            data: [{% for row in by_category %}{{ row['c'] }}{% if not loop.last %},{% endif %}{% endfor %}],
+            backgroundColor: ['#0dcaf0', '#6f42c1', '#20c997', '#ffc107', '#dc3545', '#0d6efd']
+        }]
+    },
+    options: {
+        plugins: { legend: { position: 'bottom', labels: { color: '#e9ecef', boxWidth: 12 } } }
+    }
+});
+{% endif %}
+</script>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% block title %}Login — Project Report Generator{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-auth">
+      <div class="col-lg-5 col-md-7">
+        <div class="auth-card">
+          <div class="text-center mb-4">
+            <div class="auth-icon"><i class="bi bi-box-arrow-in-right"></i></div>
+            <h3 class="fw-bold mt-3">Welcome Back</h3>
+            <p class="text-muted">Login to continue generating reports</p>
+          </div>
+          <form method="POST" novalidate id="loginForm">
+            <div class="mb-3">
+              <label class="form-label">Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input type="email" class="form-control" name="email" id="email"
+                       value="{{ email or '' }}" placeholder="you@example.com" required>
+              </div>
+              <div class="invalid-feedback-custom" id="emailError"></div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="password" class="form-control" name="password" id="password"
+                       placeholder="Enter your password" required>
+                <span class="input-group-text toggle-password" role="button"><i class="bi bi-eye"></i></span>
+              </div>
+              <div class="invalid-feedback-custom" id="passwordError"></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                <label class="form-check-label small" for="remember">Remember Me</label>
+              </div>
+              <a href="#" class="small text-decoration-none" data-bs-toggle="modal" data-bs-target="#forgotModal">Forgot Password?</a>
+            </div>
+            <button type="submit" class="btn btn-gradient w-100 rounded-pill py-2">
+              <i class="bi bi-box-arrow-in-right me-2"></i>Login
+            </button>
+          </form>
+          <p class="text-center small text-muted mt-4 mb-0">
+            Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
+          </p>
+          <div class="demo-hint mt-3">
+            <i class="bi bi-info-circle me-1"></i>
+            Demo login: <strong>demo@reportgen.com</strong> / <strong>demo1234</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-key me-2"></i>Reset Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small">Enter your registered email and we'll simulate sending a reset link (demo project — no email is actually sent).</p>
+        <div class="mb-2">
+          <input type="email" class="form-control" placeholder="you@example.com" id="resetEmail">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-gradient" id="resetSendBtn">Send Reset Link</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+<script>
+document.getElementById('resetSendBtn').addEventListener('click', function () {
+  const email = document.getElementById('resetEmail').value.trim();
+  if (!email) { alert('Please enter your email address.'); return; }
+  const modalEl = document.getElementById('forgotModal');
+  bootstrap.Modal.getInstance(modalEl).hide();
+  showToast('If an account exists for ' + email + ', a reset link has been sent (demo only).');
+});
+</script>
+{% endblock %}

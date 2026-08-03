@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block title %}My Profile | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <div class="mb-4">
+      <h2 class="fw-bold mb-1"><i class="bi bi-person-circle text-info me-2"></i>My Profile</h2>
+      <p class="text-muted small mb-0">Manage your personal information and security settings.</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Public Profile Details -->
+      <div class="col-lg-7">
+        <div class="card bg-secondary border-0 shadow-sm">
+          <div class="card-header bg-transparent border-bottom border-dark p-4">
+            <h5 class="fw-bold mb-0 text-white">Public Information</h5>
+          </div>
+          <div class="card-body p-4">
+            <form action="{{ url_for('profile') }}" method="POST" enctype="multipart/form-data">
+              
+              <div class="d-flex align-items-center gap-4 mb-4">
+                <img src="{{ url_for('static', filename='images/' ~ (user['photo'] if user['photo'] else 'default_avatar.png')) }}" 
+                     class="rounded-circle border border-2 border-info object-fit-cover" 
+                     style="width: 80px; height: 80px;" alt="Profile Photo">
+                <div>
+                  <label class="form-label text-muted small mb-1">Update Avatar</label>
+                  <input type="file" class="form-control bg-dark border-0 text-light form-control-sm" name="photo" accept=".png, .jpg, .jpeg, .webp">
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label text-light fw-semibold">Full Name</label>
+                <input type="text" class="form-control bg-dark border-0 text-light" name="name" value="{{ user.name }}" required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label text-light fw-semibold">Department</label>
+                <input type="text" class="form-control bg-dark border-0 text-light" name="department" value="{{ user.department or '' }}" placeholder="e.g., Basic Civil and Mechanical Engineering">
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label text-light fw-semibold">College / Institution</label>
+                <input type="text" class="form-control bg-dark border-0 text-light" name="college" value="{{ user.college or '' }}" placeholder="e.g., JNTUK">
+              </div>
+
+              <button type="submit" class="btn btn-gradient rounded-pill px-4">Save Changes</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security / Password Change -->
+      <div class="col-lg-5">
+        <div class="card bg-secondary border-0 shadow-sm mb-4">
+          <div class="card-header bg-transparent border-bottom border-dark p-4">
+            <h5 class="fw-bold mb-0 text-white">Change Password</h5>
+          </div>
+          <div class="card-body p-4">
+            <form action="{{ url_for('change_password') }}" method="POST">
+              <div class="mb-3">
+                <label class="form-label text-light fw-semibold small">Current Password</label>
+                <input type="password" class="form-control bg-dark border-0 text-light" name="current_password" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label text-light fw-semibold small">New Password</label>
+                <input type="password" class="form-control bg-dark border-0 text-light" name="new_password" required minlength="6">
+              </div>
+              <div class="mb-4">
+                <label class="form-label text-light fw-semibold small">Confirm New Password</label>
+                <input type="password" class="form-control bg-dark border-0 text-light" name="confirm_new_password" required minlength="6">
+              </div>
+              <button type="submit" class="btn btn-outline-info rounded-pill px-4 w-100">Update Password</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}

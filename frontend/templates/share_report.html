@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}Share Report | ReportGen{% endblock %}
+
+{% block content %}
+<div class="d-flex dashboard-wrapper">
+  {% include '_sidebar.html' %}
+
+  <main class="main-content flex-grow-1 p-4 p-lg-5 bg-dark text-light">
+    <div class="mb-4">
+      <a href="{{ url_for('my_reports') }}" class="text-info small text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Back to Reports</a>
+      <h2 class="fw-bold mb-1 mt-2">Share Report</h2>
+      <p class="text-muted small mb-0">Invite team members to collaborate on "{{ report.project_title if report else 'this document' }}".</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="card bg-secondary border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h5 class="fw-bold text-white mb-3">Invite User</h5>
+            <form action="{{ url_for('share_report', report_id=report.id if report else 0) }}" method="POST">
+              <div class="mb-3">
+                <label class="form-label text-muted small">User Email</label>
+                <input type="email" class="form-control bg-dark border-0 text-light" name="email" placeholder="colleague@example.com" required>
+              </div>
+              <div class="mb-4">
+                <label class="form-label text-muted small">Permission Level</label>
+                <select class="form-select bg-dark border-0 text-light" name="role">
+                  <option value="viewer">Viewer (Read-only)</option>
+                  <option value="editor">Editor (Can make changes)</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-gradient w-100">Send Invite</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="card bg-secondary border-0 shadow-sm h-100">
+          <div class="card-header bg-transparent border-bottom border-dark p-4">
+            <h5 class="fw-bold text-white mb-0">Current Collaborators</h5>
+          </div>
+          <div class="card-body p-0">
+            {% if collaborators %}
+              <ul class="list-group list-group-flush bg-transparent">
+                {% for c in collaborators %}
+                <li class="list-group-item bg-transparent border-dark d-flex justify-content-between align-items-center p-4">
+                  <div>
+                    <h6 class="text-white mb-0">{{ c.name }}</h6>
+                    <small class="text-muted">{{ c.email }}</small>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-dark border border-secondary text-light">{{ c.role | capitalize }}</span>
+                    <form action="{{ url_for('remove_collaborator', report_id=report.id, collab_id=c.id) }}" method="POST" class="m-0" onsubmit="return confirm('Remove this user?');">
+                      <button type="submit" class="btn btn-sm btn-link text-danger p-0"><i class="bi bi-x-circle fs-5"></i></button>
+                    </form>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <div class="text-center text-muted py-5">
+                <i class="bi bi-people display-4 mb-3 opacity-25"></i>
+                <p>No one else has access to this report yet.</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}
