@@ -331,9 +331,10 @@ def create_report(slug="mini-project"):
         if errors:
             for e in errors:
                 flash(e, "danger")
+
+    
             conn.close()
-            return render_template("create_report.html", template=template,
-                                    templates=None, draft=form_data, draft_id=draft_id)
+            return render_template("preview.html", template=template, draft_data=draft_data, errors=errors))
 
         if not form_data["project_type"]:
             form_data["project_type"] = template["name"]
