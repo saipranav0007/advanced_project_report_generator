@@ -68,12 +68,12 @@ def login_required(view):
 
     @wraps(view)
     def wrapped(*args, **kwargs):
-        if "user_id" not in session or current_user() is None:
-            session.clear()
-            flash("Your session has expired. Please log in again.", "warning")
+        if "user_id" not in session:
+            flash("Please log in to continue.", "warning")
             return redirect(url_for("login"))
         return view(*args, **kwargs)
     return wrapped
+
 
 def admin_required(view):
     from functools import wraps
@@ -91,7 +91,7 @@ def admin_required(view):
 @app.context_processor
 def inject_globals():
     unread_count = 0
-    if "user_id" in session and current_user() is not None:
+    if "user_id" in session:
         conn = get_db()
         unread_count = conn.execute(
             "SELECT COUNT(*) c FROM notifications WHERE user_id = ? AND is_read = 0",
@@ -332,7 +332,7 @@ def create_report(slug="mini-project"):
                 flash(e, "danger")
             conn.close()
             return render_template("create_report.html", template=template,
-                                    draft=draft_data, draft_id=draft_id)
+                                    templates=None, draft=form_data, draft_id=draft_id)
 
         if not form_data["project_type"]:
             form_data["project_type"] = template["name"]
@@ -366,6 +366,30 @@ def create_report(slug="mini-project"):
     conn.close()
     return render_template("create_report.html", template=template,
                             draft=draft_data, draft_id=draft_id)
+
+
+@app.route("/my-drafts")
+@login_required
+def my_drafts():
+    user = current_user()
+    conn = get_db()
+    drafts = conn.execute(
+        "SELECT d.*, t.name as template_name FROM drafts d "
+        "LEFT JOIN templates t ON d.template_slug = t.slug "
+        "WHERE d.user_id = ? ORDER BY d.updated_at DESC", (user["id"],)).fetchall()
+    conn.close()
+    parsed = []
+    for d in drafts:
+        data = json.loads(d["data_json"])
+        parsed.append({
+            "id": d["id"],
+            "title": data.get("project_title") or "Untitled Draft",
+            "template_name": d["template_name"] or d["template_slug"],
+            "template_slug": d["template_slug"],
+            "updated_at": d["updated_at"],
+        })
+    return render_template("my_drafts.html", drafts=parsed)
+
 
 @app.route("/drafts/<int:draft_id>/delete", methods=["POST"])
 @login_required
